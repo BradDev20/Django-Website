@@ -1,0 +1,28 @@
+{% include "header.html" %}
+
+  <main>
+
+    <div class="stylized-section-cream">
+        <div id="body-header">
+            <h1 class="title-main">Welcome to Dishbook</h1>
+            <p>Dishbook is a cozy place to save family
+            recipes, discover new favorites, and swap variations that feel
+            like home. Start with a trusted dish, then record the
+            tweaks—more garlic, less sugar, cast-iron instead of a sheet
+            pan—and see what other cooks tried. Keep private notes for
+            weeknights or share your version with the community, complete
+            with photos, tags, and clear steps. Build a cookbook that
+            grows with you, one small improvement at a time.</p>
+            <p id="index-button-list">
+              <a class="button" href="/login">Sign In</a>
+              <a class="button" href="/s">Browse Recipes</a>
+            </p>
+        </div>
+
+        <h2 class="title">Featured recipes</h2>
+        <p>Hand-picked comfort dishes from the community.</p>
+
+        {% include "cards.html" with recipes=recipes %}
+    </div>
+  </main>
+</body>

@@ -1,0 +1,29 @@
+{% include "header.html" %}
+
+<main>
+
+    <div class="stylized-section-cream">
+
+        <div id="profile-header">
+            <div id="body-header">
+                <h1 class="title-main">{{author.user.get_full_name}}</h1>
+                <div id="profile-info">
+                    <span>Joined {{author.user.date_joined|timesince}} ago</span>
+                    <span>Author of {{recipes|length}} recipe{{recipes|length|pluralize}}</span>
+                </div>
+            </div>
+                {% if author.photo %}
+                <img src=/profile/{{author.user.username}}/photo loading="lazy" alt="{{author.user.get_full_name}}'s profile photo">
+                {% endif %}
+        </div>
+
+        {% if author.bio %}
+            {{author.bio|linebreaks|urlize}}
+        {% endif %}
+
+        {% include "cards.html" with recipes=recipes %}
+
+    </div>
+
+</main>
+</body>

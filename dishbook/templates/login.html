@@ -1,0 +1,52 @@
+<!doctype html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+US+Trad&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/main.css">
+<title>Dishbook — Sign In</title>
+
+<body>
+  <header>
+    <h1 class="title">Dishbook</h1>
+
+    Sign In
+
+    <hr>
+
+    <nav>
+      <ul>
+          <li><a href="/static/index.html">Home</a></li>
+          <li class="visually-hidden"><a href="/static/profile.html">My Cookbook</a><li>
+      </ul>
+        <form action="/static/search.html" method="get">
+          <input name="q" placeholder="Search recipes…" />
+          <button>Search</button>
+      </form>
+    </nav>
+  </header>
+
+  <main>
+      <div class="stylized-section-cream">
+          <h2 class="title-main">Sign in to Dishbook</h2>
+          <nav id="login-screen">
+            <form action="/static/profile.html" method="post">
+
+                <div>
+                    <label class="login" for="username">Username: </label>
+                    <input class="login-box" name="username"/>
+                </div>
+
+                <div>
+                    <label class="login" for="password">Password: </label>
+                    <input class="login-box" name="password" type="password"/>
+                </div>
+
+                    <button class="login" id="searchbar">Sign in</button>
+
+            </form>
+          </nav>
+      </div>
+  </main>
+</body>

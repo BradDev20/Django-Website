@@ -1,0 +1,174 @@
+{% include "header.html" %}
+
+<form action="/recipe/{{recipe.id}}/edit" method="post">
+    {% csrf_token %}
+<main tabindex="-1">
+
+    <div class="stylized-section-cream">
+
+        <section>
+            <div id="body-header">
+                <div id="title-with-button">
+                    <label for="title" class="visually-hidden">Recipe Title</label>
+                    <input class="title-main" name="title" type="text" id="title" value="{{recipe.title}}">
+                    <button>Save</button>
+                </div>
+                <ul>
+                        <li>By <a href="/profile/{{recipe.author.username}}">{{ recipe.author.get_full_name }}</a><br></li>
+
+                        {% if recipe.copied_from %}
+                    <li>Based on <a href="/recipe/{{recipe.copied_from.id}}">{{recipe.copied_from.author.get_full_name}}'s
+                        {{recipe.copied_from.title}}</a></li>
+                        {% endif %}
+
+                        {% if recipe.get_copies > 0 %}
+                        <li>Remixed {{recipe.get_copies}} time{{recipe.get_copies|pluralize}}</li>
+                        {% endif %}
+
+                        {% if recipe.featured_on %}
+                        <li>Featured on {{recipe.featured_on|date:"F Y"}}</li>
+                        {% endif %}
+
+                  <li><ul class="tags">
+                      <li>Tags:</li>
+                      {% for t in recipe.sorted_tags %}
+                      <li><a href="/s?tag={{t.name}}">#{{t.name}}</a></li>
+                      {% endfor %}
+                  </ul></li>
+                </ul>
+            </div>
+
+            {% if errors %}
+                <output>
+                    <ul style="font-size:16px;">
+                    {% for err in errors %}
+                        <li style="margin-bottom:0.25rem;">{{err}}</li>
+                    {% endfor %}
+                    </ul>
+                    <br>
+                </output>
+            {% endif %}
+
+        </section>
+
+        <section class="recipe-info-container">
+
+                <div id="recipe-sidebar">
+                  {% if recipe.photo %}
+                  <img src=/recipe/{{recipe.id}}/photo id="recipe-image" alt="{{recipe.title}}" loading="lazy" />
+                  {% endif %}
+
+                  <dl id="recipe-info-text">
+
+                    <div>
+                    <dt>
+                      <label for="preptime">Prep:</label>
+                      <input id="preptime" name="preptime" value="{{recipe.prep_time_minutes}}" type="number" style="width:100%">min
+                    </dt>
+                    </div>
+
+                    <div>
+                    <dt>
+                      <label for="cooktime">Cook:</label>
+                      <input id="cooktime" name="cooktime" value="{{recipe.cook_time_minutes}}" type="number" style="width:100%">min
+                    </dt>
+                    </div>
+
+                    <div>
+                    <dt>
+                      <label for="totaltime">Total:</label>
+                      <input id="totaltime" readonly="readonly" value="{{recipe.total_time_minutes}}" style="width:100%">
+                    </dt>
+                    </div>
+
+                    <div>
+                    <dt>
+                      <label for="yield">Yield:</label>
+                      <input id="yield" name="yield" value="{{recipe.serves}}" type="number" style="width:100%">Serving{{recipe.serves|pluralize}}
+                    </dt>
+                    </div>
+
+                  </dl>
+                </div>
+
+                <div style="display:flex;flex-direction:column;flex-grow:2">
+                    <label for="description" class="recipe-body">Description:</label>
+                    <textarea id="description" class="recipe-body" name="description" rows="10">{{recipe.description}}</textarea>
+                </div>
+            </section>
+
+        <section class="recipe-info-container">
+            <div id="ingredients">
+              <h3 class="title">Ingredients</h3>
+                 <ul class="recipe-body">
+                        {% for ing in recipe.get_ingredients %}
+                        <!--NOTE: get_ingredients() limits the decimal to 2 places, which is why it's not done here-->
+                        <li>{{ing}}</li>
+                        {% endfor %}
+                 </ul>
+            </div>
+
+            <div id="steps">
+              <h3 class="title">Steps</h3>
+                <ol class="recipe-body">
+                    {% for step, ing_list, new_ing in steps_ings %}
+                    <li>
+                        <label for="step{{step.id}}desc" class="visually-hidden">Step {{step.order}} Description</label>
+                        <textarea id="step{{step.id}}desc" name="step{{step.id}}desc" rows="{{step.get_rows}}"
+                                  style="width:100%">{{step.description}}</textarea>
+                      <ul class="step-ingredients">
+                        {% for j in ing_list %}
+                          <li>
+                            <label for="step{{step.id}}ing{{j.id}}amt" class="visually-hidden">Ingredient Amount</label>
+                            <input id="step{{step.id}}ing{{j.id}}amt" name="step{{step.id}}ing{{j.id}}amt" style="width:15%;" type="number" step="0.1" value="{{j.amount}}">
+
+                            <label for="step{{step.id}}ing{{j.id}}unit" class="visually-hidden">Ingredient Unit</label>
+                            <input id="step{{step.id}}ing{{j.id}}unit" name="step{{step.id}}ing{{j.id}}unit" style="width:20%" type="text" value="{{j.unit}}">
+
+                            <label for="step{{step.id}}ing{{j.id}}name" class="visually-hidden">Ingredient Name</label>
+                            <input id="step{{step.id}}ing{{j.id}}name" name="step{{step.id}}ing{{j.id}}name" style="width:50%" type="text" value="{{j.name}}">
+                          </li>
+                        {% endfor %}
+                          <li>
+                            <label for="step{{step.id}}newamt" class="visually-hidden">Ingredient Amount</label>
+                            <input id="step{{step.id}}newamt" name="step{{step.id}}newamt" style="width:15%;" type="number" step="0.1" value="{{new_ing.amount}}">
+
+                            <label for="step{{step.id}}newunit" class="visually-hidden">Ingredient Unit</label>
+                            <input id="step{{step.id}}newunit" name="step{{step.id}}newunit" style="width:20%" type="text" value="{{new_ing.unit}}">
+
+                            <label for="step{{step.id}}newname" class="visually-hidden">Ingredient Name</label>
+                            <input id="step{{step.id}}newname" name="step{{step.id}}newname" style="width:50%" type="text" value="{{new_ing.name}}">
+                          </li>
+
+                      </ul>
+
+                    </li>
+                    {% endfor %}
+                    {% with step=new_step_ing.0 ing=new_step_ing.1 %}
+                    <li>
+                        <label for="newstepnewdesc" class="visually-hidden">Step {{step.order}} Description</label>
+                        <textarea id="newstepnewdesc" name="newstepnewdesc" rows="{{step.get_rows}}"
+                                  style="width:100%">{{step.description}}</textarea>
+                        <ul class="step-ingredients">
+                            <li>
+                                <label for="newstepnewamt" class="visually-hidden">Ingredient Amount</label>
+                                <input id="newstepnewamt" name="newstepnewamt" style="width:15%;" type="number" step="0.1" value="{{ing.amount}}">
+
+                                <label for="newstepnewunit" class="visually-hidden">Ingredient Unit</label>
+                                <input id="newstepnewunit" name="newstepnewunit" style="width:20%" type="text" value="{{ing.unit}}">
+
+                                <label for="newstepnewname" class="visually-hidden">Ingredient Name</label>
+                                <input id="newstepnewname" name="newstepnewname" style="width:50%" type="text" value="{{ing.name}}">
+                            </li>
+                        </ul>
+                    </li>
+                    {% endwith %}
+                </ol>
+            </div>
+        </section>
+
+    </div>
+
+  </main>
+</form>
+</body>

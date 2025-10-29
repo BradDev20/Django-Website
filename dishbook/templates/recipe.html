@@ -1,0 +1,101 @@
+{% include "header.html" %}
+
+<form action="/recipe/{{recipe.id}}/edit", method="get">
+    {% csrf_token %}
+<main tabindex="-1">
+
+    <div class="stylized-section-cream">
+
+        <section>
+            <div id="body-header">
+                <div id="title-with-button">
+                    <h2 class="title-main">{{recipe.title}}</h2>
+                    <button>Edit</button>
+                </div>
+                <ul>
+                        <li>By <a href="/profile/{{recipe.author.username}}">{{ recipe.author.get_full_name }}</a><br></li>
+
+                        {% if recipe.copied_from %}
+                        <li>Based on <a href="/recipe/{{recipe.copied_from.id}}">{{recipe.copied_from.author.get_full_name}}'s
+                        {{recipe.copied_from.title}}</a></li>
+                        {% endif %}
+
+                        {% if recipe.get_copies > 0 %}
+                        <li>Remixed {{recipe.get_copies}} time{{recipe.get_copies|pluralize}}</li>
+                        {% endif %}
+
+                        {% if recipe.featured_on %}
+                        <li>Featured on {{recipe.featured_on|date:"F Y"}}</li>
+                        {% endif %}
+
+                  <li><ul class="tags">
+                      <li>Tags:</li>
+                      {% for t in recipe.sorted_tags %}
+                      <li><a href="/s?tag={{t.name}}">#{{t.name}}</a></li>
+                      {% endfor %}
+                  </ul></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="recipe-info-container">
+
+                <div id="recipe-sidebar">
+                  {% if recipe.photo %}
+                  <img src=/recipe/{{recipe.id}}/photo id="recipe-image" alt="{{recipe.title}}" loading="lazy" />
+                  {% endif %}
+
+                  <dl id="recipe-info-text">
+
+                    <div>
+                    <dt>Prep:</dt>
+                      <dd>{{recipe.prep_time_minutes}} min</dd>
+                    </div>
+
+                    <div>
+                    <dt>Cook:</dt>
+                      <dd>{{recipe.cook_time_minutes}} min</dd>
+                    </div>
+
+                    <div>
+                    <dt>Total:</dt>
+                      <dd>{{recipe.total_time_minutes}} min</dd>
+                    </div>
+
+                    <div>
+                    <dt>Yield:</dt>
+                      <dd>{{recipe.serves}} Serving{{recipe.serves|pluralize}}</dd>
+                    </div>
+
+                  </dl>
+                </div>
+
+              <div class="recipe-body">{{recipe.description|linebreaks|urlize}}</div>
+            </section>
+
+        <section class="recipe-info-container">
+            <div id="ingredients">
+              <h3 class="title">Ingredients</h3>
+                 <ul class="recipe-body">
+                        {% for ing in recipe.get_ingredients %}
+                        <!--NOTE: get_ingredients() limits the decimal to 2 places, which is why it's not done here-->
+                        <li>{{ing}}</li>
+                        {% endfor %}
+                 </ul>
+            </div>
+
+            <div id="steps">
+              <h3 class="title">Steps</h3>
+                <ol class="recipe-body">
+                    {% for step in recipe.get_steps %}
+                    <li>{{step.description}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </section>
+
+    </div>
+
+  </main>
+</form>
+</body>

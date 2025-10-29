@@ -1,0 +1,18 @@
+
+      <div id="index-cards">
+          {% for recipe in recipes %}
+            <div class="stylized-section-white">
+                <a href="/recipe/{{recipe.id}}">
+                    {% if recipe.photo %}
+                    <img src=/recipe/{{recipe.id}}/photo alt="Photo of {{recipe.title}}" loading="lazy" />
+                    {% endif %}
+                    <h3 class="title">{{recipe.title}}</h3>
+                </a>
+                    <ul>
+                    {% for tag in recipe.sorted_tags %}
+                        <li><a href="/s?tag={{tag.name}}">#{{tag.name}}</a></li>
+                    {% endfor %}
+                    </ul>
+            </div>
+          {% endfor %}
+      </div>

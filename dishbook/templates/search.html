@@ -1,0 +1,14 @@
+{% include "header.html" %}
+
+<main>
+    <section class="stylized-section-cream">
+        <div id="body-header">
+            <h1 class="title-main">Search Recipes</h1>
+            <form action="/s?tag=" method="get">
+                <input id="searchbar" value=""/>
+            </form>
+        </div>
+        {% include "cards.html" with recipes=recipes %}
+   </section>
+  </main>
+</body>

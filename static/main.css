@@ -1,0 +1,452 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html{
+    display:flex;
+    font-family: "Nunito", sans-serif;
+    font-size: 18px;
+    background-color: #F7F1E8;
+    max-width: 700px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.5rem;
+    gap: 3rem;
+    width: 100%;
+
+}
+
+input{
+    font-family: "Nunito", sans-serif;
+}
+
+input[type=number][size]{
+    width: calc(attr(size type(<number>)) * 1ch + 2rem);
+}
+
+output{
+    color:red;
+}
+
+textarea{
+    resize: vertical;
+    width: 100%;
+    vertical-align: top;
+}
+
+#body-header{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem;
+}
+
+#body-header ul{
+    display: flex;
+    column-gap: 1.5rem;
+    row-gap: 0;
+    flex-wrap: wrap;
+}
+
+#body-header ul.tags{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+}
+
+#body-header input{
+    width: 100%;
+    padding: 0.25rem;
+}
+
+#profile-header{
+    display: flex;
+    justify-content: space-between;
+}
+#profile-header img{
+    width: 5rem;
+    height: 5rem;
+}
+
+#profile-info{
+    display: flex;
+    gap: 1rem;
+}
+
+#header-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+header{
+    display: flex;
+    border-bottom-width: 1px;
+    flex-direction: column;
+}
+
+header ul{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.25rem;
+    height: auto;
+}
+
+nav form{
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 1;
+    height: 2rem;
+}
+
+.stylized-section-cream{
+    padding: 1rem;
+    border-width: 1px;
+    border-radius: 24px;
+    border-color: #B5B5B5;
+    border-style: solid;
+    background-color: #FFF9F1;
+
+}
+.stylized-section-white{
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    height: fit-content;
+    width: calc((100% - 2rem)/3);
+    align-content: start;
+    box-shadow: -2px 0px 4px 0px #B5B5B5;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+
+}
+
+
+#index-cards{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.5rem 1rem 0 1rem;
+    justify-content: flex-start;
+}
+
+.stylized-section-white ul{
+    display: flex;
+    flex-direction: row;
+    column-gap: 0.5rem;
+    row-gap: 0;
+    flex-wrap: wrap;
+    text-wrap: nowrap;
+}
+
+.stylized-section-white img{
+    max-width: 100%;
+}
+
+section div.recipe-body {
+    padding-bottom: 2rem;
+}
+
+
+a {
+    text-decoration: none;
+    color: #8B5E34;
+    font-weight: 600;
+}
+
+a:hover {
+    color: #A8570C;
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+}
+
+hr{
+    border: none;
+    height: 2px;
+    background-color: #8B5E34;
+}
+
+.title {
+    color: #A8570C;
+    font-family: "Playwrite US Trad", Arial, cursive;
+    font-size: 22.5px; <!--18px * 1.25-->
+}
+
+.title-main {
+    color: #A8570C;
+    font-family: "Playwrite US Trad", Arial, cursive;
+    font-size: 32.4px; <!--18px * 1.8-->
+}
+
+.title-main form{
+    padding: 0.5rem;
+    width: 100%;
+}
+
+#title-with-button{
+    display: flex;
+    flex-direction: row;
+    gap: 1.0rem;
+    align-items: start;
+    justify-content: space-between;
+}
+
+#title-with-button button{
+    padding: 0.25rem;
+
+}
+
+#recipe-info-text{
+    font-weight: 600;
+    display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    column-gap: 0.25rem;
+}
+
+#recipe-info-text div{
+    display:flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: start;
+}
+
+#ingredients-steps{
+    display: flex;
+    gap: 1rem;
+}
+
+#ingredients{
+    max-width: 33%;
+    flex-grow: 1;
+}
+
+#steps{
+    max-width: 66%;
+    flex-grow: 2;
+}
+
+.step-ingredients {
+  width: 100%;
+  text-indent: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.step-ingredients li{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
+  display: list-item !important;
+  list-style: disc inside !important;
+  gap: 0.25rem;
+  padding: 0.25rem 0 0.25rem 0;
+}
+
+.step-ingredients li input{
+    padding: 0.1rem;
+}
+
+#recipe-info-text dt{
+  width:25%;
+}
+
+#recipe-info-text dd{
+    width:75%;
+}
+
+.recipe-body{
+    line-height: 1.25;
+}
+
+ul.recipe-body{
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 0 1rem;
+    text-indent: -1rem;
+}
+
+ol.recipe-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 0 1em;
+}
+
+.button{
+    padding: .5em 1em;
+    background-color: #8B5E34;
+    color: #F7F1E8;
+    border-radius: 14px;
+}
+
+.button:hover{
+    color: #FFF9F1;
+    background-color: #A8570C;
+}
+
+.visually-hidden{
+    display: none;
+}
+
+#recipe-image {
+    transform: rotate(2deg);
+    border-width: 5px;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#recipe-sidebar{
+    display:flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 33%;
+    text-wrap: nowrap;
+    margin-bottom: 2rem;
+
+}
+
+.recipe-info-container{
+    display:flex;
+    gap: 1rem;
+}
+
+.recipe-info-container div.recipe-body{
+    flex-grow: 2;
+    max-width: 66%;
+}
+
+.login{
+    font-size: 20px;
+}
+.login-box{
+    width: 250px;
+    height: 25px;
+    padding: 0.25rem;
+    background-color: #a2def3;
+}
+
+#login-screen{
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#login-screen form{
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    height: fit-content;
+}
+
+#login-screen form div{
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    width: 100%;
+
+}
+
+#login-screen form div input{
+    width: 80%;
+    height: 1.5rem;
+}
+
+#login-screen form div label{
+    width: 20%;
+}
+
+#login-screen button{
+    width: calc(max(50%, 200px));
+}
+
+#searchbar{
+    font-size: 20px;
+}
+
+#index-button-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+@media(max-width: 500px){
+    .recipe-info-container {
+        display:flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    #recipe-sidebar{
+        display:flex;
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    .recipe-info-container p, #ingredients, #steps{
+        max-width: 100%;
+    }
+
+    body{ padding: 0;}
+    header{padding: 0 0.5rem;}
+    hr{margin-left: -1rem; width:120%;}
+}
+
+@media(max-width: 700px){
+
+    #login-screen form div{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 0;
+        align-self: baseline;
+        width: 100%;
+
+    }
+
+    #login-screen form div input{
+        width: 100%;
+    }
+
+}
+
+@media(max-width: 600px){
+    .stylized-section-white {
+        width: calc((100% - 2rem) / 2);
+    }
+
+}
+
+@media(max-width: 450px) {
+    header nav ul, header nav form{
+        flex-direction: column;
+        gap:0.5rem;
+    }
+
+}
+
+@media(max-width: 400px){
+    .stylized-section-white {
+        width: calc((100% - 2rem));
+    }
+}
