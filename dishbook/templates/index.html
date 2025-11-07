@@ -14,7 +14,9 @@
             with photos, tags, and clear steps. Build a cookbook that
             grows with you, one small improvement at a time.</p>
             <p id="index-button-list">
+              {% if not user.is_authenticated %}
               <a class="button" href="/login">Sign In</a>
+              {% endif %}
               <a class="button" href="/s">Browse Recipes</a>
             </p>
         </div>

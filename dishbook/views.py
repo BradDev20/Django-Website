@@ -1,20 +1,28 @@
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
+from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 from . import models
 
 def index(request):
-    r = models.Recipe.objects.all()
-    return render(request, "index.html", {"recipes": r[len(r)-3: len(r)], "title": "Welcome"})
+    r1 = models.Recipe.objects.filter(is_public=True)
+    r2 = models.Recipe.objects.filter(author__id=request.user.id).filter(is_public=False)
+    r = r1.union(r2).order_by('-id')
+    return render(request, "index.html", {"recipes": r[0: min(3,len(r))], "title": "Welcome"})
 
 def profile(request, username):
     try:
         author = models.Profile.objects.get(user__username=username)
     except models.Profile.DoesNotExist:
         return render(request, "404.html", {"title": "404 Not Found"})
-    recipes = models.Recipe.objects.filter(author=author.user)
+
+    if request.user == author.user:
+        recipes = models.Recipe.objects.filter(author=author.user)
+    else:
+        recipes = models.Recipe.objects.filter(author=author.user, is_public=True)
     return render(request, "profile.html", {"author": author, "recipes": recipes, "title": author.user.get_full_name})
 
 def recipe(request, recipe_id):
@@ -22,14 +30,22 @@ def recipe(request, recipe_id):
         r = models.Recipe.objects.get(id=recipe_id)
     except models.Recipe.DoesNotExist:
         return render(request, '404.html', {"title": "404 Not Found"})
+
+    if request.user != r.author and not r.is_public:
+        raise PermissionDenied
+
     return render(request, "recipe.html", {"recipe":r, "title": r.title})
 
+@login_required(login_url="/login")
 def edit_recipe(request, recipe_id):
 
     try:
         r = models.Recipe.objects.get(id=recipe_id)
     except models.Recipe.DoesNotExist:
         return render(request, '404.html', {"title": "404 Not Found"})
+
+    if request.user != r.author:
+        raise PermissionDenied
 
     err_ing = []
     err_step = []
@@ -109,6 +125,9 @@ def edit_recipe(request, recipe_id):
         r.prep_time_minutes = request.POST.get("preptime")
         r.cook_time_minutes = request.POST.get("cooktime")
         r.serves = request.POST.get("yield")
+
+        if request.FILES.get("photo"):
+            r.photo = request.FILES.get("photo")
 
         ord = 1
         s_list = r.get_steps()
@@ -254,7 +273,86 @@ def edit_recipe(request, recipe_id):
                             "errors": []})
 
 def search(request):
-    return render(request, "search.html", {"recipes": models.Recipe.objects.all(), "title": "Search"})
+
+    sch = request.GET.get("tag")
+    if not sch:
+        r1 = models.Recipe.objects.filter(is_public=True)
+        r2 = models.Recipe.objects.filter(author__id=request.user.id).filter(is_public=False)
+    else:
+        r1 = models.Recipe.objects.filter(is_public=True, tags__name=sch)
+        r2 = models.Recipe.objects.filter(author__id=request.user.id, tags__name=sch).filter(is_public=False)
+    r = r1.union(r2)
+
+    return render(request, "search.html", {"recipes": r, "title": "Search"})
 
 def signin(request):
-    return render(request, "login.html", { })
+    next_site = request.GET.get('next') or request.POST.get('next') or '/'
+    print(next_site)
+
+    if request.method == "GET":
+        return render(request, "login.html", {"title": "Sign In", "next": next_site })
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if not user:
+            return render(request, "login.html", {"title": "Sign In", "next": next_site })
+        else:
+            login(request, user)
+            if next_site.startswith('/') and not next_site.startswith('//'):
+                return redirect(next_site)
+            return redirect('/')
+
+    return render(request, "login.html", {"title": "Sign In", "next": next_site})
+
+def signout(request):
+    logout(request)
+    return redirect('/login')
+
+@login_required(login_url="/login")
+def make_public(request, recipe_id):
+
+    if request.method == "POST":
+
+        try:
+            r = models.Recipe.objects.get(id=recipe_id)
+        except models.Recipe.DoesNotExist:
+            return render(request, '404.html', {"title": "404 Not Found"})
+
+        if request.user != r.author:
+            raise PermissionDenied
+
+        r.is_public = True
+        r.save()
+
+        return redirect(f'/recipe/{recipe_id}')
+
+    raise PermissionDenied
+
+def is_small_image(img):
+
+    if not img:
+        raise Http404
+
+    if img.size > 64 * 1024 * 1024: #64 megabytes
+        raise Http404
+
+    if not img.name.endswith(".png") or (not next(img.chunks())[0:4] == b'\x89\x50\x4e\x47'):
+        raise Http404
+
+def recipe_image(request, recipe_id):
+
+    r = get_object_or_404(models.Recipe, id=recipe_id)
+    if not r.is_public and request.user != r.author:
+        raise PermissionDenied
+    is_small_image(r.photo)
+    return FileResponse(r.photo.open("rb"), "image/png")
+
+def profile_image(request, username):
+
+    user = get_object_or_404(models.Profile, user__username=username)
+    is_small_image(user.photo)
+    return FileResponse(user.photo.open("rb"), "image/png")

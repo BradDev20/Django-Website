@@ -1,6 +1,6 @@
 {% include "header.html" %}
 
-<form action="/recipe/{{recipe.id}}/edit", method="get">
+<form action="/recipe/{{recipe.id}}/edit" method="get">
     {% csrf_token %}
 <main tabindex="-1">
 
@@ -10,11 +10,20 @@
             <div id="body-header">
                 <div id="title-with-button">
                     <h2 class="title-main">{{recipe.title}}</h2>
-                    <button>Edit</button>
+                    <div style="gap:0.5rem">
+                        {% if recipe.author == user %}
+                        <button>Edit</button>
+                        {% if not recipe.is_public %}
+                        <button formaction="/recipe/{{recipe.id}}/makepublic" formmethod="post">Make Public</button>
+                        {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
                 <ul>
                         <li>By <a href="/profile/{{recipe.author.username}}">{{ recipe.author.get_full_name }}</a><br></li>
-
+                        {% if not recipe.is_public %}
+                        <li>Private Recipe</li>
+                        {% endif %}
                         {% if recipe.copied_from %}
                         <li>Based on <a href="/recipe/{{recipe.copied_from.id}}">{{recipe.copied_from.author.get_full_name}}'s
                         {{recipe.copied_from.title}}</a></li>

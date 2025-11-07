@@ -19,11 +19,15 @@ from django.urls import path
 from dishbook import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path("", views.index),
     path("profile/<str:username>", views.profile),
+    path("profile/<str:username>/photo", views.profile_image),
     path("recipe/<int:recipe_id>", views.recipe),
     path("recipe/<int:recipe_id>/edit", views.edit_recipe),
     path("s", views.search),
-    path("login/", views.signin),
+    path("login", views.signin),
+    path("logout", views.signout),
+    path("recipe/<int:recipe_id>/makepublic", views.make_public),
+    path("recipe/<int:recipe_id>/photo", views.recipe_image)
 ]

@@ -28,13 +28,21 @@ def reject_non_standard_string(val):
     if re.match(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$", val):
         raise ValidationError("Value cannot be something non-standard.")
 
+def reject_big_files(val):
+
+    if val.size > 64 * 1024 * 1024: #64 megabytes
+        raise ValidationError("File cannot exceed 64 MB.")
+
+    if not val.name.endswith(".png") or (not next(val.chunks())[0:4] == b'\x89\x50\x4e\x47'):
+        raise ValidationError("File must be a PNG.")
+
 class Tag(models.Model):
     name = models.CharField(max_length=32)
 
 class Recipe(models.Model):
 
     title = models.CharField(max_length=64,validators=[reject_non_standard_string])
-    photo = models.ImageField(upload_to="media/", null=True, blank=True)
+    photo = models.ImageField(upload_to="media/", null=True, blank=True, validators=[reject_big_files])
     description = models.TextField(validators=[reject_non_standard_string])
     prep_time_minutes = models.PositiveIntegerField()
     cook_time_minutes = models.PositiveIntegerField()
@@ -42,6 +50,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     copied_from = models.ForeignKey('self', blank=True, null=True, on_delete=models.SET_NULL, related_name='copies')
     featured_on = models.DateTimeField(max_length=256, null=True, blank=True)
+    is_public = models.BooleanField(default=False)
 
     tags = models.ManyToManyField(Tag)
 

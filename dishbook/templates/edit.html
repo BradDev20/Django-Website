@@ -1,6 +1,6 @@
 {% include "header.html" %}
 
-<form action="/recipe/{{recipe.id}}/edit" method="post">
+<form action="/recipe/{{recipe.id}}/edit" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 <main tabindex="-1">
 
@@ -57,6 +57,8 @@
                   {% if recipe.photo %}
                   <img src=/recipe/{{recipe.id}}/photo id="recipe-image" alt="{{recipe.title}}" loading="lazy" />
                   {% endif %}
+                  <label for="photo">Upload Photo</label>
+                  <input id="photo" type="file" name="photo" accept="image/png">
 
                   <dl id="recipe-info-text">
 

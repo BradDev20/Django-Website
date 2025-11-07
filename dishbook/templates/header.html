@@ -11,10 +11,19 @@
   <header>
       <div id="header-title">
           <h1 class="title">Dishbook</h1>
+          {% if user.get_full_name %}
           <ul>
-              <li>Jane Doe</li>
-              <li><a href="/profile/a">View Profile</a></li>
+              <li>{{user.get_full_name}}</li>
+              <li><a href="/profile/{{user.username}}">View Profile</a></li>
+              <li><a href="/logout">Sign Out</a></li>
           </ul>
+          {% else %}
+          {% if request.path != '/login' %}
+          <ul>
+              <li><a href="/login?next={{request.get_full_path}}">Sign In</a></li>
+          </ul>
+          {% endif %}
+          {% endif %}
       </div>
 
       <hr>
@@ -22,11 +31,9 @@
       <nav>
           <ul>
               <li><a href="/">Home</a></li>
-              <li><a href="/profile/a">My Cookbook</a><li>
           </ul>
-        <form class="visually-hidden" action="/s?tag=" method="get">
-          <input name="q" placeholder="Search recipes…" />
-          <button>Search</button>
+        <form action="/s" method="get">
+          <button style="padding:0.5rem">Search Recipes</button>
         </form>
       </nav>
   </header>

@@ -5,10 +5,15 @@
         <div id="body-header">
             <h1 class="title-main">Search Recipes</h1>
             <form action="/s?tag=" method="get">
-                <input id="searchbar" value=""/>
+                <input id="searchbar" name="tag" value=""/>
             </form>
         </div>
+        {% if recipes %}
         {% include "cards.html" with recipes=recipes %}
+
+        {% else %}
+        No recipes found!
+        {% endif %}
    </section>
   </main>
 </body>

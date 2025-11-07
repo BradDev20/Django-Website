@@ -17,7 +17,7 @@ from dishbook.models import User, Recipe, Step, Ingredient, Tag, Profile
 
 def asset(name, mode="r"):
     file_dir = os.path.dirname(__file__)
-    photo_path = os.path.join(file_dir, name)
+    photo_path = os.path.join(file_dir, "static/",name)
     if os.path.exists(photo_path) and os.path.isfile(photo_path):
         kwargs = {} if "b" in mode else { "encoding": "utf8"}
         return open(photo_path, mode, **kwargs)
@@ -123,10 +123,10 @@ def parse_recipe(lines, author):
             recipe.photo.save(metadata["photo"], File(f), save=True)
     
     # Default is_public based on title hash
-    #h = hashlib.md5(title.encode('utf-8')).hexdigest()
-    #num = int(h[8], 16)
-    #recipe.is_public = num >= 10
-    #recipe.save()
+    h = hashlib.md5(title.encode('utf-8')).hexdigest()
+    num = int(h[8], 16)
+    recipe.is_public = num >= 10
+    recipe.save()
     
     # Parse steps and ingredients
     i = 0
@@ -201,8 +201,8 @@ def parse_file(blocks, authors):
                 if recipe.author != prev.author:
                     recipe.copied_from = prev
                     recipe.save()
-                    #prev.is_public = True
-                    #prev.save()
+                    prev.is_public = True
+                    prev.save()
                 break
 
     # Feature only the three specific recipes
@@ -220,7 +220,7 @@ def parse_file(blocks, authors):
         feat_date = base + datetime.timedelta(days=days)
         feat_dt = datetime.datetime.combine(feat_date, datetime.time(hour=hour, minute=0))
         r.featured_on = timezone.make_aware(feat_dt)
-        #r.is_public = True
+        r.is_public = True
         r.save()
 
     return parsed
